@@ -1,0 +1,230 @@
+.kpi-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  border-top: 4px solid transparent;
+}
+
+.kpi-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.kpi-green {
+  border-top-color: var(--color-green);
+}
+.kpi-supergreen {
+  border-top-color: var(--color-super-green);
+}
+.kpi-yellow {
+  border-top-color: var(--color-yellow);
+}
+.kpi-red {
+  border-top-color: var(--color-red);
+}
+
+.kpi-header {
+  margin-bottom: var(--spacing-3);
+}
+
+.kpi-department {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpi-name {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-gray-800);
+  line-height: 1.3;
+  min-height: 36px;
+}
+
+.kpi-gauge-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto var(--spacing-3);
+}
+
+.kpi-gauge {
+  width: 100%;
+  height: 100%;
+}
+
+.kpi-gauge-bg {
+  stroke: var(--color-gray-200);
+}
+
+.kpi-gauge-progress {
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.kpi-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.kpi-value-number {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-gray-900);
+}
+
+.kpi-footer {
+  text-align: center;
+}
+
+.kpi-status {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  margin-bottom: var(--spacing-2);
+}
+
+.goal-met {
+  background-color: var(--color-green-bg);
+  color: var(--color-green-text);
+}
+
+.goal-exceeded {
+  background-color: var(--color-super-green-bg);
+  color: var(--color-super-green-text);
+  font-weight: 700;
+}
+
+.at-risk {
+  background-color: #fef3c7;
+  color: #b45309;
+  font-weight: 700;
+}
+
+.off-track {
+  background-color: #fee2e2;
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.kpi-status-wrapper {
+  min-height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.kpi-status.placeholder {
+  visibility: hidden;
+}
+
+.kpi-metrics {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+}
+
+.kpi-percentage {
+  font-weight: 700;
+}
+
+.kpi-trend {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.kpi-trend.trend-up {
+  color: var(--color-green-text);
+}
+.kpi-trend.trend-down {
+  color: var(--color-red-text);
+}
+.kpi-trend.trend-neutral {
+  color: var(--color-gray-500);
+}
+
+/* Schedule Status Badge */
+.kpi-schedule-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: var(--spacing-2);
+}
+
+.kpi-schedule-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.schedule-ahead {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.schedule-on-track {
+  background-color: var(--color-green-bg);
+  color: var(--color-green-text);
+}
+
+.schedule-behind {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+/* Variance display */
+.kpi-variance {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+}
+
+.kpi-variance.positive {
+  color: #0369a1;
+}
+
+.kpi-variance.negative {
+  color: #b45309;
+}
+
+/* Expected progress row */
+.kpi-expected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-400);
+}
+
+.kpi-expected-label {
+  font-weight: 500;
+}
+
+.kpi-expected-value {
+  font-weight: 600;
+  color: var(--color-gray-500);
+}

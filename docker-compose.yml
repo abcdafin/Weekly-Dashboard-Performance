@@ -1,0 +1,67 @@
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: weekly-dashboard-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: weeklyds
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Go Backend API
+  backend:
+    build:
+      context: ./backend
+    container_name: weekly-dashboard-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Server
+      PORT: "8080"
+      # Database (uses Docker service name 'db' as host)
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: weeklyds
+      DB_SSL_MODE: disable
+      # Google OAuth
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-582161973333-er2l5o8lg967add4oh4ndsua2c2jculn.apps.googleusercontent.com}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-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}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://localhost:3000/api/v1/auth/callback}
+      # Google Sheets
+      SPREADSHEET_ID: ${SPREADSHEET_ID:-1rxaAAppsG-J7bI6bNGklnBEGFqIV9M-4hN-KlcUByKo}
+      SHEET_NAME: ${SHEET_NAME:-Dashboard Template}
+      # JWT
+      JWT_SECRET: ${JWT_SECRET:-weekly-dashboard-jwt-secret-change-in-production-2026}
+      JWT_EXPIRATION_HOURS: "24"
+      # Frontend URL (via Nginx proxy)
+      FRONTEND_URL: http://localhost:3000
+    ports:
+      - "8080:8080"
+
+  # React Frontend (Nginx)
+  frontend:
+    build:
+      context: ./frontend
+    container_name: weekly-dashboard-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  pgdata:

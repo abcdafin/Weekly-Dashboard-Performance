@@ -1,0 +1,66 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  padding: var(--spacing-6);
+}
+
+.login-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-10);
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+}
+
+.login-header {
+  margin-bottom: var(--spacing-8);
+}
+
+.login-logo {
+  height: 60px;
+  margin-bottom: var(--spacing-6);
+}
+
+.login-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin-bottom: var(--spacing-2);
+}
+
+.login-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-600);
+}
+
+.login-content {
+  margin-bottom: var(--spacing-8);
+}
+
+.login-content .btn-google {
+  width: 100%;
+  margin-bottom: var(--spacing-4);
+}
+
+.login-note {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+  padding: var(--spacing-4);
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-md);
+}
+
+.login-footer {
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.login-footer p {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-400);
+}

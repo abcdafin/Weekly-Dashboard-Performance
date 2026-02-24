@@ -1,0 +1,110 @@
+.summary-metrics {
+  display: flex;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.summary-card {
+  flex: 1;
+  min-width: 140px;
+  background: white;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summary-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-1);
+}
+
+.summary-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.summary-desc {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+}
+
+.text-green { color: var(--color-green-text); }
+.text-yellow { color: var(--color-yellow-text); }
+.text-red { color: var(--color-red-text); }
+
+.status-yellow-bg {
+  background-color: var(--color-yellow-bg);
+}
+
+.status-red-bg {
+  background-color: var(--color-red-bg);
+}
+
+.vs-last-week {
+  background: var(--color-gray-50);
+  justify-content: center;
+}
+
+.vs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.vs-badge.positive {
+  background-color: var(--color-green-bg);
+  color: var(--color-green-text);
+}
+
+.vs-badge.negative {
+  background-color: var(--color-red-bg);
+  color: var(--color-red-text);
+}
+
+/* Schedule Overview Card */
+.schedule-overview {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+}
+
+.schedule-counts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: var(--spacing-2);
+}
+
+.schedule-count-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.schedule-count-item.ahead {
+  color: #0369a1;
+}
+
+.schedule-count-item.on-track {
+  color: var(--color-green-text);
+}
+
+.schedule-count-item.behind {
+  color: #b45309;
+}

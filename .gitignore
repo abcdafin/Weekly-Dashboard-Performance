@@ -1,0 +1,26 @@
+# Environment variables
+.env
+backend/.env
+
+# Excluded docs
+plan.md
+requirements.md
+
+# Dependencies
+frontend/node_modules/
+backend/vendor/
+
+# Build output
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+.gemini/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker volumes
+pgdata/
