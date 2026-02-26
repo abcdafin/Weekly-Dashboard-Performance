@@ -26,8 +26,9 @@ type Config struct {
 	GoogleRedirectURI  string
 
 	// Google Sheets
-	SpreadsheetID string
-	SheetName     string
+	SpreadsheetID   string
+	SheetName       string
+	SpreadsheetYear int
 
 	// JWT
 	JWTSecret     string
@@ -63,8 +64,9 @@ func Load() {
 		GoogleRedirectURI:  getEnv("GOOGLE_REDIRECT_URI", "http://localhost:8080/api/v1/auth/callback"),
 
 		// Google Sheets
-		SpreadsheetID: getEnv("SPREADSHEET_ID", "1Xlb_RMkAEShWkqMAuXoJX6Nb9wig4MUCy7dZTULK56s"),
-		SheetName:     getEnv("SHEET_NAME", "DashboardTemplate"),
+		SpreadsheetID:   getEnv("SPREADSHEET_ID", "1Xlb_RMkAEShWkqMAuXoJX6Nb9wig4MUCy7dZTULK56s"),
+		SheetName:       getEnv("SHEET_NAME", "DashboardTemplate"),
+		SpreadsheetYear: getEnvInt("SPREADSHEET_YEAR", 2026),
 
 		// JWT
 		JWTSecret:     getEnv("JWT_SECRET", "weekly-dashboard-secret-key-change-in-production"),

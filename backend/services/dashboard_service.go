@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"strconv"
 	"time"
 
+	"weekly-dashboard/config"
 	"weekly-dashboard/database"
 	"weekly-dashboard/models"
 )
@@ -105,11 +107,17 @@ func (s *DashboardService) GetDashboardData(ctx context.Context, user *models.Us
 		return nil, err
 	}
 
-	// Fetch KPI data from Google Sheets
-	kpiDataList, err := s.sheetsService.FetchKPIData(ctx, user, indicators, month)
-	if err != nil {
-		log.Printf("Warning: Error fetching sheet data: %v", err)
-		// Continue with empty data
+	// Only fetch from spreadsheet if year matches configured spreadsheet year
+	var kpiDataList []KPIData
+	if year == config.AppConfig.SpreadsheetYear {
+		var err error
+		kpiDataList, err = s.sheetsService.FetchKPIData(ctx, user, indicators, month)
+		if err != nil {
+			log.Printf("Warning: Error fetching sheet data: %v", err)
+			// Continue with empty data
+		}
+	} else {
+		log.Printf("Skipping spreadsheet fetch: requested year %d != configured year %d", year, config.AppConfig.SpreadsheetYear)
 	}
 
 	// Get previous week's data for WoW comparison
@@ -236,29 +244,25 @@ func (s *DashboardService) GetDashboardData(ctx context.Context, user *models.Us
 func (s *DashboardService) GetAvailableMonths() *MonthsResponse {
 	now := time.Now()
 	currentMonth := int(now.Month())
-	currentYear := now.Year()
+	spreadsheetYear := config.AppConfig.SpreadsheetYear
 
-	// Generate months for current year and previous year
+	// Generate months for the configured spreadsheet year
 	var months []MonthOption
 
-	// Previous year months
 	for m := 1; m <= 12; m++ {
 		months = append(months, MonthOption{
 			Month:   m,
-			Year:    currentYear - 1,
-			Label:   getMonthName(m) + " " + string(rune(currentYear-1)),
-			HasData: s.hasDataForMonth(m, currentYear-1),
+			Year:    spreadsheetYear,
+			Label:   getMonthName(m) + " " + strconv.Itoa(spreadsheetYear),
+			HasData: s.hasDataForMonth(m, spreadsheetYear),
 		})
 	}
 
-	// Current year months up to current month
-	for m := 1; m <= currentMonth; m++ {
-		months = append(months, MonthOption{
-			Month:   m,
-			Year:    currentYear,
-			Label:   getMonthName(m) + " " + string(rune(currentYear)),
-			HasData: s.hasDataForMonth(m, currentYear),
-		})
+	// Determine current month: if we're in the spreadsheet year, use actual month
+	// Otherwise default to January
+	displayMonth := 1
+	if now.Year() == spreadsheetYear {
+		displayMonth = currentMonth
 	}
 
 	return &MonthsResponse{
@@ -267,8 +271,8 @@ func (s *DashboardService) GetAvailableMonths() *MonthsResponse {
 			Month int `json:"month"`
 			Year  int `json:"year"`
 		}{
-			Month: currentMonth,
-			Year:  currentYear,
+			Month: displayMonth,
+			Year:  spreadsheetYear,
 		},
 	}
 }

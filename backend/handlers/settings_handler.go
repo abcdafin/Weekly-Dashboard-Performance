@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"weekly-dashboard/config"
@@ -22,14 +23,16 @@ func NewSettingsHandler() *SettingsHandler {
 
 // SpreadsheetSettingsResponse represents the spreadsheet settings response
 type SpreadsheetSettingsResponse struct {
-	SpreadsheetID string `json:"spreadsheet_id"`
-	SheetName     string `json:"sheet_name"`
+	SpreadsheetID   string `json:"spreadsheet_id"`
+	SheetName       string `json:"sheet_name"`
+	SpreadsheetYear int    `json:"spreadsheet_year"`
 }
 
 // UpdateSpreadsheetRequest represents the request to update spreadsheet settings
 type UpdateSpreadsheetRequest struct {
-	SpreadsheetID string `json:"spreadsheet_id"`
-	SheetName     string `json:"sheet_name"`
+	SpreadsheetID   string `json:"spreadsheet_id"`
+	SheetName       string `json:"sheet_name"`
+	SpreadsheetYear int    `json:"spreadsheet_year"`
 }
 
 // GetSpreadsheetSettings returns current spreadsheet configuration
@@ -37,8 +40,9 @@ func (h *SettingsHandler) GetSpreadsheetSettings(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data": SpreadsheetSettingsResponse{
-			SpreadsheetID: config.AppConfig.SpreadsheetID,
-			SheetName:     config.AppConfig.SheetName,
+			SpreadsheetID:   config.AppConfig.SpreadsheetID,
+			SheetName:       config.AppConfig.SheetName,
+			SpreadsheetYear: config.AppConfig.SpreadsheetYear,
 		},
 	})
 }
@@ -88,18 +92,34 @@ func (h *SettingsHandler) UpdateSpreadsheetSettings(c *gin.Context) {
 		return
 	}
 
+	// Save spreadsheet year
+	spreadsheetYear := req.SpreadsheetYear
+	if spreadsheetYear < 2020 || spreadsheetYear > 2030 {
+		spreadsheetYear = config.AppConfig.SpreadsheetYear // Keep existing if invalid
+	}
+	if err := upsertSetting(models.SettingSpreadsheetYear, strconv.Itoa(spreadsheetYear)); err != nil {
+		log.Printf("Failed to save spreadsheet_year setting: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   "Failed to save settings",
+		})
+		return
+	}
+
 	// Update runtime config
 	config.AppConfig.SpreadsheetID = spreadsheetID
 	config.AppConfig.SheetName = sheetName
+	config.AppConfig.SpreadsheetYear = spreadsheetYear
 
-	log.Printf("Spreadsheet settings updated: ID=%s, Sheet=%s", spreadsheetID, sheetName)
+	log.Printf("Spreadsheet settings updated: ID=%s, Sheet=%s, Year=%d", spreadsheetID, sheetName, spreadsheetYear)
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "Spreadsheet settings updated successfully",
 		"data": SpreadsheetSettingsResponse{
-			SpreadsheetID: spreadsheetID,
-			SheetName:     sheetName,
+			SpreadsheetID:   spreadsheetID,
+			SheetName:       sheetName,
+			SpreadsheetYear: spreadsheetYear,
 		},
 	})
 }
@@ -168,6 +188,13 @@ func LoadSettingsFromDB() {
 			if setting.Value != "" {
 				config.AppConfig.SheetName = setting.Value
 				log.Printf("Loaded sheet_name from database: %s", setting.Value)
+			}
+		case models.SettingSpreadsheetYear:
+			if setting.Value != "" {
+				if yearVal, err := strconv.Atoi(setting.Value); err == nil && yearVal >= 2020 && yearVal <= 2030 {
+					config.AppConfig.SpreadsheetYear = yearVal
+					log.Printf("Loaded spreadsheet_year from database: %d", yearVal)
+				}
 			}
 		}
 	}

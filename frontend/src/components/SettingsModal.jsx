@@ -6,6 +6,7 @@ import './SettingsModal.css'
 function SettingsModal({ isOpen, onClose }) {
   const [spreadsheetId, setSpreadsheetId] = useState('')
   const [sheetName, setSheetName] = useState('')
+  const [spreadsheetYear, setSpreadsheetYear] = useState(2026)
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(false)
   const { success: showSuccess, error: showError } = useToast()
@@ -17,6 +18,7 @@ function SettingsModal({ isOpen, onClose }) {
       const data = response.data.data
       setSpreadsheetId(data.spreadsheet_id || '')
       setSheetName(data.sheet_name || '')
+      setSpreadsheetYear(data.spreadsheet_year || 2026)
     } catch (err) {
       console.error('Failed to fetch settings:', err)
       showError('Failed to load current settings')
@@ -41,16 +43,25 @@ function SettingsModal({ isOpen, onClose }) {
     try {
       await settingsApi.updateSpreadsheet({
         spreadsheet_id: spreadsheetId.trim(),
-        sheet_name: sheetName.trim()
+        sheet_name: sheetName.trim(),
+        spreadsheet_year: spreadsheetYear
       })
       showSuccess('Spreadsheet settings updated successfully!')
       onClose()
+      // Reload page to apply new year setting
+      window.location.reload()
     } catch (err) {
       console.error('Failed to update settings:', err)
       showError('Failed to update settings')
     } finally {
       setLoading(false)
     }
+  }
+
+  // Generate year options from 2026 to 2030
+  const yearOptions = []
+  for (let y = 2026; y <= 2030; y++) {
+    yearOptions.push(y)
   }
 
   if (!isOpen) return null
@@ -94,6 +105,23 @@ function SettingsModal({ isOpen, onClose }) {
               />
               <span className="settings-hint">
                 The name of the sheet tab containing KPI data
+              </span>
+            </div>
+
+            <div className="settings-field">
+              <label htmlFor="spreadsheet-year">Spreadsheet Year</label>
+              <select
+                id="spreadsheet-year"
+                value={spreadsheetYear}
+                onChange={e => setSpreadsheetYear(parseInt(e.target.value))}
+                className="settings-input"
+              >
+                {yearOptions.map(y => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+              <span className="settings-hint">
+                The year that this spreadsheet data belongs to. The dashboard will display data for this year only.
               </span>
             </div>
           </div>

@@ -6,8 +6,8 @@ const MONTHS = [
 ]
 
 function MonthSelector({ month, year, onChange }) {
-  const currentYear = new Date().getFullYear()
-  const years = [currentYear, currentYear + 1]
+  // Show years from 2026 to 2030
+  const years = [2026, 2027, 2028, 2029, 2030]
 
   const handlePrev = () => {
     let newMonth = month - 1
@@ -16,7 +16,9 @@ function MonthSelector({ month, year, onChange }) {
       newMonth = 12
       newYear--
     }
-    onChange(newMonth, newYear)
+    if (newYear >= 2026) {
+      onChange(newMonth, newYear)
+    }
   }
 
   const handleNext = () => {
@@ -26,7 +28,9 @@ function MonthSelector({ month, year, onChange }) {
       newMonth = 1
       newYear++
     }
-    onChange(newMonth, newYear)
+    if (newYear <= 2030) {
+      onChange(newMonth, newYear)
+    }
   }
 
   return (

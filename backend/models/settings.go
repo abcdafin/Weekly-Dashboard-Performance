@@ -18,6 +18,7 @@ func (AppSetting) TableName() string {
 
 // Setting keys constants
 const (
-	SettingSpreadsheetID = "spreadsheet_id"
-	SettingSheetName     = "sheet_name"
+	SettingSpreadsheetID   = "spreadsheet_id"
+	SettingSheetName       = "sheet_name"
+	SettingSpreadsheetYear = "spreadsheet_year"
 )
